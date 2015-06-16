@@ -2,11 +2,9 @@
 
 
 """
-page extractor and merger for pdf documents
+PDF Extractor And Merger
 
-by Novice Live, http://novicelive.org/ :)
-
-Copyright (C) 2015  Gu Zhengxiong
+Copyright (C) 2015 谷征雄 (rectigu@gmail.com, http://novicelive.org/)
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -31,71 +29,7 @@ import traceback
 import PyPDF2
 
 
-def main():
-    parser = argparse.ArgumentParser(
-
-        description="""DESCRIPTION
-\tmanipulate pages either in the same pdf or in different pdf documents
-\textract, remove, repeat or reorder, and if you like,
-\tafter all of these manipulations, you can then merge them
-\tpage numbers start from 1\n\n\tsupport multiple source documents""",
-
-        epilog="""FULL PAGE RANGE SYNTAX
-\t1. [start][-][end] specifies a single page range.
-
-\t\tif <start> is not present or is 0 or is greater than
-\t\t<end> (this <end> is that <end> which won't be greater than the page count
-\t\t), then <start> will be 1; if <end> is absent or 0 or greater than
-\t\t the page count, then <end> will be the page count.
-\t\tyou can not leave both <start> and <end> unspecified
-\t\tunless the - is also absent. if there is only a number,
-\t\t then both <start> and <end> will be determined from the number.
-
-\t2. + is used to combine several single page ranges.
-
-\t\tspecially, merely applying a single + means 0-0+0-0.
-\t\tthus only using + will double the pdf, ++ will triple it, and so on.
-
-\t3. under these two syntaxes, freedom is granted.
-EXAMPLE USES
-\t1. pdfextract test.pdf:5-
-\t\textracting pages from the 5th to the last
-\t\t(suppose it is no less than 5 pages)
-
-\t2. pdfextract test.pdf:-5
-\t\textracting from the first page to the 5th
-\t\t(suppose it is no less than 5 pages)
-
-\t3. pdfextract test.pdf:-5+7- -o no-6.pdf
-\t\tremoving the 6th page, naming the new pdf as no-6.pdf
-\t\t(suppose it has more than 6 pages)
-
-\t4. pdfextract test.pdf:++
-\t\ttripling the source pdf, with the same pages repeated two more times
-
-\t5. pdfextract test.pdf:1+3+5+7+9
-\t\textracting the 1st, 3rd, 5th, 7th and 9th page,
-\t\tsuppose it is no less than 9 pages""",
-
-        formatter_class=argparse.RawDescriptionHelpFormatter)
-
-    parser.add_argument('pdf_colon_ops', metavar='pdf_document:page_ranges',
-                        nargs='+',
-                        help="""the source document to operate on
-and the page ranges (full syntaxes see below). only specifying the pdf file
-means the whole document is targeted, i.e. 0-0 (see below :))""")
-
-    parser.add_argument('-o', '--output', metavar='pdf_output', dest='output',
-                        help="""do not use the default output name
-(which is output.pdf).
-export the resulting document with the specified file name""")
-
-    parser.add_argument('-v', '--verbose', dest='verbose', action='store_true',
-                        help="""display more error and warning information,
-as well as what is going on""")
-
-    args = parser.parse_args()
-
+def main(args):
     if not args.output:
         args.output = 'output.pdf'
 
@@ -103,13 +37,11 @@ as well as what is going on""")
 
     for i in args.pdf_colon_ops:
         pdf_ops_list = i.split(':')
-
         if len(pdf_ops_list) == 2:
             pdf, pages = pdf_ops_list
         else:
             pdf = pdf_ops_list[0]
             pages = ''
-
         try:
             reader = PyPDF2.PdfFileReader(
                 pdf,
@@ -125,7 +57,6 @@ as well as what is going on""")
             pages = '1-' + str(reader.numPages)
 
         page_ranges = parse_page_ranges(pages)
-
         if page_ranges:
             try:
                 [
@@ -262,5 +193,58 @@ def check_single_range(single_range_string):
     return True
 
 
+def parse_args():
+    parser = argparse.ArgumentParser(
+        description="""DESCRIPTION
+\tmanipulate pages either in the same pdf or in different pdf documents
+\textract, remove, repeat or reorder, and if you like,
+\tafter all of these manipulations, you can then merge them
+\tpage numbers start from 1\n\n\tsupport multiple source documents""",
+        epilog=epilog,
+        formatter_class=argparse.RawDescriptionHelpFormatter)
+
+    parser.add_argument('pdf_colon_ops', metavar='pdf_document:page_ranges',
+                        nargs='+',
+                        help="""the source document to operate on
+and the page ranges (full syntaxes see below). only specifying the pdf file
+means the whole document is targeted, i.e. 0-0 (see below :))""")
+
+    parser.add_argument('-o', '--output', metavar='pdf_output', dest='output',
+                        help="""do not use the default output name
+(which is output.pdf).
+export the resulting document with the specified file name""")
+
+    parser.add_argument('-v', '--verbose', dest='verbose', action='store_true',
+                        help="""display more error and warning information,
+as well as what is going on""")
+
+    return parser.parse_args()
+
+
+epilog = """
+FULL PAGE RANGE SYNTAX
+\t1. [start][-][end] specifies a single page range.
+
+\t\tif <start> is not present or is 0 or is greater than
+\t\t<end> (this <end> is that <end> which won't be greater than the page count
+\t\t), then <start> will be 1; if <end> is absent or 0 or greater than
+\t\t the page count, then <end> will be the page count.
+\t\tyou can not leave both <start> and <end> unspecified
+\t\tunless the - is also absent. if there is only a number,
+\t\t then both <start> and <end> will be determined from the number.
+
+\t2. + is used to combine several single page ranges.
+
+\t\tspecially, merely applying a single + means 0-0+0-0.
+\t\tthus only using + will double the pdf, ++ will triple it, and so on.
+
+\t3. under these two syntaxes, freedom is granted.
+"""
+
+
 if __name__ == '__main__':
-    main()
+    args = parse_args()
+    try:
+        main(args)
+    except KeyboardInterrupt:
+        print('user cancelled')

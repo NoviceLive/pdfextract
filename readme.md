@@ -3,6 +3,13 @@
 ## PDF Page Extractor And Merger
 
 
+## Features
+
+- Multiple page range support
+
+- Multiple source PDFs support
+
+
 ## Dependencies
 
 - [PyPDF2](https://github.com/mstamy2/PyPDF2), which can be installed via pip
@@ -33,7 +40,7 @@ See `./pdfextract.py --help`.
 (With the same pages repeated two more times)
 > `pdfextract test.pdf:++`
 
-5. Extracting the 1st, 3rd, 5th, 7th and 9th page,
+5. Extracting the 1st, 3rd, 5th, 7th and 9th page
 (Suppose it is no less than 9 pages)
 > `pdfextract test.pdf:1+3+5+7+9`
 
