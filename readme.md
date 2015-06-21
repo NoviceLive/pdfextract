@@ -6,14 +6,12 @@
 ## Features
 
 - Multiple page range support
-
 - Multiple source PDFs support
 
 
 ## Dependencies
 
 - [PyPDF2](https://github.com/mstamy2/PyPDF2), which can be installed via pip
-
 - [Python](https://www.python.org/)
 
 
@@ -47,9 +45,10 @@ See `./pdfextract.py --help`.
 
 ## TODO
 
+- Deal with encrypted PDF documents
 - Improve the syntax since the current one seems strange.
 
 
 ## License
 
-GPL
+GPLv3
