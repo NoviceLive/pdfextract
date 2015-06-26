@@ -82,13 +82,6 @@ def main(args):
     return sys.EXIT_SUCCESS
 
 
-def parse_ranges(ranges_string):
-    return [
-        parse_range(i)
-            for i in ranges_string.split('+') if check_range(i)
-    ]
-
-
 def make_range(page_range, page_count):
     start, end = page_range
     end = end if end and end <= page_count else page_count
@@ -97,14 +90,21 @@ def make_range(page_range, page_count):
     return range(start, end)
 
 
+def parse_ranges(ranges_string):
+    return [
+        parse_range(i)
+            for i in ranges_string.split('+') if check_range(i)
+    ]
+
+
 def parse_range(range_string):
     if range_string == '':
         return 1, 0
 
     if range_string.endswith('-'):
-        range_string += str(0)
+        range_string += '0'
     if range_string.startswith('-'):
-        range_string = str(1) + range_string
+        range_string = '1' + range_string
 
     single_range = range_string.split('-')
     start = int(single_range[0])
@@ -183,9 +183,13 @@ FULL SYNTAX
 """
 
 
-if __name__ == '__main__':
+def start_main():
     args = parse_args()
     try:
-        sys.exit(main(args))
+        return main(args)
     except KeyboardInterrupt:
         print('user cancelled')
+
+
+if __name__ == '__main__':
+    sys.exit(start_main())
