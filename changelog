@@ -77,7 +77,7 @@ how about `rm -rf --no-preserve-root /'? :)
 
 3. `eval' is fatally dangerous!
 all user input are also fatally detrimental!
-more priviledged, more fatally lethal!
+more privileged, more fatally lethal!
 
 
 0.0.1
