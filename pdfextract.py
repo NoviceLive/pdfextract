@@ -5,7 +5,7 @@
 """
 PDF Extractor And Merger
 
-Copyright (C) 2015 谷征雄 (rectigu@gmail.com, http://novicelive.org/)
+Copyright 2015 Gu Zhengxiong <rectigu@gmail.com>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -31,48 +31,30 @@ import PyPDF2
 
 
 def main(args):
-    if not args.output:
-        args.output = 'output.pdf'
-
     writer = PyPDF2.PdfFileWriter()
-
     for i in args.pdf_colon_ops:
-        pdf_ops_list = i.split(':')
-        if len(pdf_ops_list) == 2:
-            pdf, pages = pdf_ops_list
-        else:
-            pdf = pdf_ops_list[0]
-            pages = ''
+        pdf_ops = i.split(':')
+        pdf = pdf_ops[0]
+        ranges = '' if len(pdf_ops) == 1 else pdf_ops[1]
+
         try:
-            reader = PyPDF2.PdfFileReader(
-                pdf,
-                warndest=None if args.verbose else sys.stdin
-            )
+            reader = PyPDF2.PdfFileReader(pdf)
         except:
             print('could not read: {}'.format(pdf))
             if args.verbose:
                 traceback.print_exc()
-            exit()
+            return 1
 
-        if pages == '':
-            pages = '1-' + str(reader.numPages)
-
-        page_ranges = parse_ranges(pages)
+        if ranges == '':
+            ranges = '1-' + str(reader.numPages)
+        page_ranges = parse_ranges(ranges)
         if page_ranges:
             try:
-                [
-                    [
+                for j in page_ranges:
+                    for i in make_range(j, reader.numPages):
                         writer.addPage(reader.getPage(i))
-                        ==
-                        (
+                        if args.verbose:
                             print('adding page {} from {}'.format(i + 1, pdf))
-                            if args.verbose else None
-                        )
-
-                        for i in make_range(j, reader.numPages)
-                    ]
-                    for j in page_ranges
-                ]
             except:
                 print('add page error')
                 if args.verbose:
@@ -116,7 +98,6 @@ def make_range(page_range, page_count):
 
 def parse_range(range_string):
     if range_string == '':
-
         return 1, 0
 
     if range_string.endswith('-'):
@@ -133,14 +114,9 @@ def parse_range(range_string):
 
 def check_range(range_string):
     if range_string == '':
-
         return True
-
     if re.sub(r'\d+\-\d+|\d+\-|\-\d+|\d+', '', range_string, 1) == '':
-
         return True
-
-    print('syntax error: {}'.format(range_string))
 
     return False
 
@@ -151,7 +127,6 @@ def parse_args():
         epilog=epilog,
         formatter_class=argparse.RawDescriptionHelpFormatter
     )
-
     parser.add_argument(
         'pdf_colon_ops',
         metavar='PDF:ranges',
@@ -161,7 +136,8 @@ def parse_args():
     parser.add_argument(
         '-o',
         '--output',
-        help="use the provided file name instead of output.pdf"
+        default='output.pdf',
+        help="use the provided file name instead of the default"
     )
     parser.add_argument(
         '-l',
@@ -209,6 +185,6 @@ FULL SYNTAX
 if __name__ == '__main__':
     args = parse_args()
     try:
-        main(args)
+        sys.exit(main(args))
     except KeyboardInterrupt:
         print('user cancelled')
