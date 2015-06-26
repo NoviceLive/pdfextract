@@ -8,6 +8,16 @@ setup(
     name = 'pdfextract',
     version = '0.1.2',
 
+    classifiers = [
+        'Development Status :: 3 - Alpha',
+        'Programming Language :: Python :: 2',
+        'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.2',
+        'Programming Language :: Python :: 3.3',
+        'Programming Language :: Python :: 3.4',
+    ],
+
     install_requires = ['PyPDF2'],
 
     author = 'Gu Zhengxiong',

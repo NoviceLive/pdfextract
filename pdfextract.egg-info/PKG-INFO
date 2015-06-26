@@ -1,0 +1,14 @@
+Metadata-Version: 1.1
+Name: pdfextract
+Version: 0.1.2
+Summary: PDF Extractor And Merger
+Home-page: https://github.com/NoviceLive/pdfextract
+Author: Gu Zhengxiong
+Author-email: gzxdgg@qq.com
+License: GPLv3+
+Description: UNKNOWN
+Keywords: pdf extractor,pdf merger
+Platform: UNKNOWN
+Classifier: Development Status :: 3 - Alpha
+Classifier: Programming Language :: Python :: 2
+Classifier: Programming Language :: Python :: 3

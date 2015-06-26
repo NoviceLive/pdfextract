@@ -1,0 +1,3 @@
+[console_scripts]
+pdfextract = pdfextract:start_main
+
