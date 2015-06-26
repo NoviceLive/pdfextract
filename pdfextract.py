@@ -22,9 +22,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
 
+import sys
+sys.EXIT_SUCCESS = 0
+sys.EXIT_FAILURE = 1
 import re
 import argparse
-import sys
 import traceback
 
 import PyPDF2
@@ -43,7 +45,7 @@ def main(args):
             print('could not read: {}'.format(pdf))
             if args.verbose:
                 traceback.print_exc()
-            return 1
+            return sys.EXIT_FAILURE
 
         if ranges == '':
             ranges = '1-' + str(reader.numPages)
@@ -60,13 +62,11 @@ def main(args):
                 if args.verbose:
                     traceback.print_exc()
         else:
-            print('no valid range in the specified ranges: {}'.format(pages))
-
-    total_page_count = writer.getNumPages()
+            print('no valid range in the specified ranges: {}'.format(ranges))
 
     sys.setrecursionlimit(args.limit * sys.getrecursionlimit())
-
-    if total_page_count:
+    page_count = writer.getNumPages()
+    if page_count:
         try:
             with open(args.output, 'wb') as output:
                 writer.write(output)
@@ -74,11 +74,12 @@ def main(args):
             print('could not write: {}'.format(args.output))
             if args.verbose:
                 traceback.print_exc()
-            exit()
-
-        print('exported {} page(s) successfully'.format(total_page_count))
+            return sys.EXIT_FAILURE
+        print('exported {} page(s) successfully'.format(page_count))
     else:
-        print('no valid page in the specified operations: {}'.format(pages))
+        print('no valid page in the specified operations: {}'.format(ranges))
+
+    return sys.EXIT_SUCCESS
 
 
 def parse_ranges(ranges_string):
