@@ -1,3 +1,4 @@
+pdfextract.py
 setup.py
 pdfextract.egg-info/PKG-INFO
 pdfextract.egg-info/SOURCES.txt
