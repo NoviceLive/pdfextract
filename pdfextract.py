@@ -185,10 +185,7 @@ FULL SYNTAX
 
 def start_main():
     args = parse_args()
-    try:
-        return main(args)
-    except KeyboardInterrupt:
-        print('user cancelled')
+    return main(args)
 
 
 if __name__ == '__main__':
