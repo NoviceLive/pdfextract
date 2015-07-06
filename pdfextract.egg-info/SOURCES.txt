@@ -1,8 +1,0 @@
-pdfextract.py
-setup.py
-pdfextract.egg-info/PKG-INFO
-pdfextract.egg-info/SOURCES.txt
-pdfextract.egg-info/dependency_links.txt
-pdfextract.egg-info/entry_points.txt
-pdfextract.egg-info/requires.txt
-pdfextract.egg-info/top_level.txt
