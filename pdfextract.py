@@ -1,8 +1,5 @@
-# -*- coding: utf-8 -*-
-
-
 """
-PDF Extractor And Merger
+PDF Extractor And Merger (In The Very Meantime!)
 
 Copyright 2015 Gu Zhengxiong <rectigu@gmail.com>
 
@@ -13,101 +10,56 @@ GPL
 import sys
 sys.EXIT_SUCCESS = 0
 sys.EXIT_FAILURE = 1
-import re
 import argparse
-import traceback
+import logging
 
 import PyPDF2
+
+from rangeparser import *
 
 
 def main(args):
     writer = PyPDF2.PdfFileWriter()
     for i in args.pdf_colon_ops:
         pdf_ops = i.split(':')
-        pdf = pdf_ops[0]
-        ranges = '' if len(pdf_ops) == 1 else pdf_ops[1]
-
+        file_name = pdf_ops[0]
         try:
-            reader = PyPDF2.PdfFileReader(pdf)
+            reader = PyPDF2.PdfFileReader(file_name)
         except:
-            print('could not read: {}'.format(pdf))
-            if args.verbose:
-                traceback.print_exc()
+            logging.exception('Can not read: {}'.format(file_name))
             return sys.EXIT_FAILURE
 
+        ranges = '' if len(pdf_ops) == 1 else pdf_ops[1]
         if ranges == '':
             ranges = '1-' + str(reader.numPages)
-        page_ranges = parse_ranges(ranges)
-        if page_ranges:
-            try:
-                for j in page_ranges:
-                    for i in make_range(j, reader.numPages):
-                        writer.addPage(reader.getPage(i))
-                        if args.verbose:
-                            print('adding page {} from {}'.format(i + 1, pdf))
-            except:
-                print('add page error')
-                if args.verbose:
-                    traceback.print_exc()
-        else:
-            print('no valid range in the specified ranges: {}'.format(ranges))
+
+        for i in make_ranges(ranges, reader.numPages):
+            logging.info(
+                'Adding page {} of {}'.format(i, file_name)
+            )
+            if not args.test:
+                try:
+                    writer.addPage(reader.getPage(i - 1))
+                except:
+                    logging.exception('Can not add page {}'.format(i))
 
     sys.setrecursionlimit(args.limit * sys.getrecursionlimit())
+
     page_count = writer.getNumPages()
     if page_count:
         try:
             with open(args.output, 'wb') as output:
                 writer.write(output)
         except:
-            print('could not write: {}'.format(args.output))
-            if args.verbose:
-                traceback.print_exc()
+            logging.exception('Can not write: {}'.format(args.output))
             return sys.EXIT_FAILURE
-        print('exported {} page(s) successfully'.format(page_count))
+        logging.info('Exported {} page(s)'.format(page_count))
+    elif args.test:
+        logging.warning('This is only a dry run')
     else:
-        print('no valid page in the specified operations: {}'.format(ranges))
+        logging.warning('No pages in this range: {}'.format(ranges))
 
     return sys.EXIT_SUCCESS
-
-
-def make_range(page_range, page_count):
-    start, end = page_range
-    end = end if end and end <= page_count else page_count
-    start = start - 1 if start and start <= end else 0
-
-    return range(start, end)
-
-
-def parse_ranges(ranges_string):
-    return [
-        parse_range(i)
-            for i in ranges_string.split('+') if check_range(i)
-    ]
-
-
-def parse_range(range_string):
-    if range_string == '':
-        return 1, 0
-
-    if range_string.endswith('-'):
-        range_string += '0'
-    if range_string.startswith('-'):
-        range_string = '1' + range_string
-
-    single_range = range_string.split('-')
-    start = int(single_range[0])
-    end = int(single_range[1]) if len(single_range) == 2 else start
-
-    return start, end
-
-
-def check_range(range_string):
-    if range_string == '':
-        return True
-    if re.sub(r'\d+\-\d+|\d+\-|\-\d+|\d+', '', range_string, 1) == '':
-        return True
-
-    return False
 
 
 def parse_args():
@@ -116,6 +68,7 @@ def parse_args():
         epilog=epilog,
         formatter_class=argparse.RawDescriptionHelpFormatter
     )
+
     parser.add_argument(
         'pdf_colon_ops',
         metavar='PDF:ranges',
@@ -136,10 +89,17 @@ def parse_args():
         help="increase recursion limit the provided times"
     )
     parser.add_argument(
+        '-t',
+        '--test',
+        action='store_true',
+        help='dry run and do not take action'
+    )
+    parser.add_argument(
         '-v',
         '--verbose',
-        action='store_true',
-        help="turn on verbose mode"
+        action='count',
+        default=0,
+        help='turn on verbose mode, -vv for debugging mode'
     )
 
     return parser.parse_args()
@@ -147,10 +107,10 @@ def parse_args():
 
 description = """
 DESCRIPTION
-\tmanipulate pages either in the same PDF or in different PDF documents.
+\tmanipulate pages either in the same or in different PDF documents.
 \textract, remove, repeat or reorder, and if you like,
 \tafter all of these manipulations, you can then merge them.
-\n\tpage numbers start from 1.\n\tmultiple source documents is supported.
+\n\tpage numbers start from 1.\n\tmultiple documents are supported.
 """
 
 
@@ -173,6 +133,16 @@ FULL SYNTAX
 
 def start_main():
     args = parse_args()
+
+    logging.basicConfig(
+        format='%(levelname)-11s: %(message)s',
+        level={
+            0: logging.WARNING,
+            1: logging.INFO,
+            2: logging.DEBUG
+        }[args.verbose % 3]
+    )
+
     return main(args)
 
 
