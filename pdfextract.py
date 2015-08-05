@@ -15,7 +15,7 @@ import logging
 
 import PyPDF2
 
-from rangeparser import *
+from rangeparser import make_ranges
 
 
 def main(args):

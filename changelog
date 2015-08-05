@@ -1,70 +1,74 @@
-0.1.1 -- Feb 7, 2015
-1. Added support for multiple source documents.
-   Now you can merge the extracted pages in the very same command,
-   no matter where these pages are extracted from.
+	0.1.2 -- Jun 26, 2015
+	1. Uploaded to the PyPI.
 
 
-0.1.0 -- Feb 6, 2015
-1. Rewritten from scratch, using PyPDF2, pure python.
-   You can extract, remove, duplicate or rearrange pages as you like.
+	0.1.1 -- Feb 7, 2015
+	1. Added support for multiple source documents.
+	   Now you can merge the extracted pages in the very same command,
+	   no matter where these pages are extracted from.
 
 
-0.0.5 -- Feb 3, 2015
-1. Added support for multiple range,
-   but changed commandline options a lot.
-   No more direct option for removing pages,
-   but this is likely to be added in later codes,
-   in the form of syntactic sugar for extracting.
-   `-f', `-l' and `-r' was removed, while `-p' took their place.
+	0.1.0 -- Feb 6, 2015
+	1. Rewritten from scratch, using PyPDF2, pure python.
+	   You can extract, remove, duplicate or rearrange pages as you like.
 
 
-0.0.4 -- Feb 2, 2015
-1. `eval' is evil. no `eval' is also nice.
+	0.0.5 -- Feb 3, 2015
+	1. Added support for multiple range,
+	   but changed commandline options a lot.
+	   No more direct option for removing pages,
+	   but this is likely to be added in later codes,
+	   in the form of syntactic sugar for extracting.
+	   `-f', `-l' and `-r' was removed, while `-p' took their place.
 
 
-0.0.3 -- Jan 29, 2015
-1. Let's check the sanity of that eval's argument. :)
-   And also restrict the execution environment of that eval
-   to one that only contains the `subprocess' module,
-   but it seems to be of trivial use
-   as `subprocess' can do a lot of evil only by itself, :(
-   and the code below does not work as i expected!
-   The environment was not restricted at all! :(
-
-   restrict_env = {'subprocess':__import__('subprocess')}
-   eval('print(globals())', restrict_env)
-
-   The reason is in the docs,
-   `if the globals dictionary is present and lacks ‘__builtins__’,
-   the current globals are copied into globals
-   before expression is parsed'.
-   So, am i going to write a python sandbox?
-   No! At least not now! Stop here! Escaping is enough.
-   Let's assume it is enough. :)
+	0.0.4 -- Feb 2, 2015
+	1. `eval' is evil. no `eval' is also nice.
 
 
-0.0.2 Jan 28, 2015
-1. Introduced `eval'
-   to achieve simultaneously uniting separated single pages.
-   But see 2.
+	0.0.3 -- Jan 29, 2015
+	1. Let's check the sanity of that eval's argument. :)
+	   And also restrict the execution environment of that eval
+	   to one that only contains the `subprocess' module,
+	   but it seems to be of trivial use
+	   as `subprocess' can do a lot of evil only by itself, :(
+	   and the code below does not work as i expected!
+	   The environment was not restricted at all! :(
 
-   Newly wrapped `pdfinfo', thus there is now no need
-   to specify the page count at commandline.
+	   restrict_env = {'subprocess':__import__('subprocess')}
+	   eval('print(globals())', restrict_env)
 
-2. That `eval'! command injection!
-   `base_name' is completely under malicious attackers' control.
-   Invoke this script with a valid pdf document
-   whose filename was offensively crafted.
-
-   e.g. test'])==__import__('os').system('rm -rf '+chr(47))#.pdf
-   The above example will `rm -rf /'.
-   How about `rm -rf --no-preserve-root /'? :)
-
-3. `eval' is fatally dangerous!
-   All user input are also fatally detrimental!
-   More privileged, more fatally lethal!
+	   The reason is in the docs,
+	   `if the globals dictionary is present and lacks ‘__builtins__’,
+	   the current globals are copied into globals
+	   before expression is parsed'.
+	   So, am i going to write a python sandbox?
+	   No! At least not now! Stop here! Escaping is enough.
+	   Let's assume it is enough. :)
 
 
-0.0.1 Jan 10, 2015
-1. The initial workable version,
-   invoking `pdfseparate' and `pdfunite' for every single page.
+	0.0.2 Jan 28, 2015
+	1. Introduced `eval'
+	   to achieve simultaneously uniting separated single pages.
+	   But see 2.
+
+	   Newly wrapped `pdfinfo', thus there is now no need
+	   to specify the page count at commandline.
+
+	2. That `eval'! command injection!
+	   `base_name' is completely under malicious attackers' control.
+	   Invoke this script with a valid pdf document
+	   whose filename was offensively crafted.
+
+	   e.g. test'])==__import__('os').system('rm -rf '+chr(47))#.pdf
+	   The above example will `rm -rf /'.
+	   How about `rm -rf --no-preserve-root /'? :)
+
+	3. `eval' is fatally dangerous!
+	   All user input are also fatally detrimental!
+	   More privileged, more fatally lethal!
+
+
+	0.0.1 Jan 10, 2015
+	1. The initial workable version,
+	   invoking `pdfseparate' and `pdfunite' for every single page.
