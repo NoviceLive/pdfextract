@@ -12,9 +12,9 @@ setup(
     author = 'Gu Zhengxiong',
     author_email = 'gzxdgg@qq.com',
 
-    description = 'PDF Extractor And Merger',
-    license = 'GPLv3+',
-    keywords = 'pdf extractor, pdf merger',
+    description = 'PDF extractor, and in the very meantime, merger, based on PyPDF2',
+    license = 'GPL',
+    keywords = 'PDF Extract, PDF Split, PDF Merge',
     url = 'https://github.com/NoviceLive/pdfextract',
 
     classifiers = [

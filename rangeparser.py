@@ -25,6 +25,7 @@ def make_ranges(ranges_string, upper):
 
 def parse_range(range_string, upper):
     # four cases of range_string: '' '7-' '-9' '10'
+    # one more case: '1-8'
 
     if range_string == '':
         return 1, upper
@@ -47,6 +48,7 @@ def check_range(range_string):
     if range_string == '':
         return True
 
+    # awkward emulation of re.fullmatch
     if re.sub(r'\d+\-\d+|\d+\-|\-\d+|\d+', '', range_string, 1) == '':
         return True
 
