@@ -56,4 +56,5 @@ GPL
 ## Related Projects
 
 - [pdfcat](https://github.com/mstamy2/PyPDF2/blob/master/Scripts/pdfcat)
+
   It comes with PyPDF2, and uses a slice-like syntax, which is more flexible.
