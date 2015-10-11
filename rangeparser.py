@@ -10,6 +10,9 @@ import re
 
 
 def make_ranges(ranges_string, upper):
+    """
+    Make ranges from the specified string.
+    """
     ranges = itertools.chain(
         *itertools.starmap(
             range,
@@ -24,6 +27,9 @@ def make_ranges(ranges_string, upper):
 
 
 def parse_range(range_string, upper):
+    """
+    Parse a range.
+    """
     # four cases of range_string: '' '7-' '-9' '10'
     # one more case: '1-8'
 
@@ -45,11 +51,12 @@ def parse_range(range_string, upper):
 
 
 def check_range(range_string):
+    """
+    Validate the range.
+    """
     if range_string == '':
         return True
-
     # awkward emulation of re.fullmatch
     if re.sub(r'\d+\-\d+|\d+\-|\-\d+|\d+', '', range_string, 1) == '':
         return True
-
     return False
