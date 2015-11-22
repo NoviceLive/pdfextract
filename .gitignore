@@ -2,4 +2,4 @@ build
 dist
 *.egg-info
 output.pdf
-__pycache__
+*.pyc

@@ -56,7 +56,9 @@ def check_range(range_string):
     """
     if range_string == '':
         return True
-    # awkward emulation of re.fullmatch
-    if re.sub(r'\d+\-\d+|\d+\-|\-\d+|\d+', '', range_string, 1) == '':
+    # awkward ad-hoc emulation of re.fullmatch
+    if re.sub(
+            r'\d+\-\d+|\d+\-|\-\d+|\d+', '', range_string, 1
+    ) == '':
         return True
     return False

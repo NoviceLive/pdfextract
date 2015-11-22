@@ -1,0 +1,11 @@
+[reports]
+
+reports = no
+
+[format]
+
+max-line-length = 69
+
+[variables]
+
+additional-builtins = _

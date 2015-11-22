@@ -1,12 +1,22 @@
+"""
+PDF Extractor And Merger (In The Very Meantime!)
+
+Copyright 2015 Gu Zhengxiong <rectigu@gmail.com>
+
+GPL
+"""
+
+
 from setuptools import setup
 
 
 setup(
     name='pdfextract',
     version='0.1.2',
-    py_modules=['pdfextract', 'rangeparser'],
-    provides=['pdfextract'],
-
+    packages=['pdfextract'],
+    entry_points={
+        'console_scripts' : ['pdfextract=pdfextract.start:main']
+    },
     install_requires=['PyPDF2'],
 
     author='Gu Zhengxiong',
@@ -27,8 +37,4 @@ setup(
         'Programming Language :: Python :: 3.3',
         'Programming Language :: Python :: 3.4',
     ],
-
-    entry_points={
-        'console_scripts' : ['pdfextract=pdfextract:main']
-        }
 )
